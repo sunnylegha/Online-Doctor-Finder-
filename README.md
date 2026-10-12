@@ -1,4 +1,4 @@
-# Online-Doctor-Finder-
+# QuickHealer-
 
 QuickHealer – Online Doctor Appointment Booking System 
 
