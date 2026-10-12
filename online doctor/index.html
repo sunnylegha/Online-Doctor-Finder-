@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QuickHealer | Online Doctor Appointments</title>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Custom Styles -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="light-mode">
+
+    <!-- Navbar -->
+    <nav class="navbar glass">
+        <div class="nav-brand">
+            <i class="fa-solid fa-house-medical-pulse text-danger"></i> <span class="brand-text">QuickHealer</span>
+        </div>
+        <div class="nav-links">
+            <a href="index.html"><i class="fa-solid fa-house"></i> Home</a>
+            <a href="#" data-route="doctors"><i class="fa-solid fa-user-doctor"></i> Doctors</a>
+        </div>
+        <div class="nav-actions">
+            <button class="btn btn-emergency" onclick="openEmergencyModal()"><i class="fa-solid fa-truck-medical"></i>
+                Emergency</button>
+            <button id="theme-toggle" class="icon-btn" title="Toggle Theme"><i class="fa-solid fa-moon"></i></button>
+            <div id="nav-btn-guest">
+                <a href="login.html" class="btn btn-primary">Login</a>
+            </div>
+            <div id="nav-btn-user" class="hidden">
+                <div class="notif-dropdown-container" style="position: relative; margin-right: 0.5rem; display: flex; align-items: center;">
+                    <button class="icon-btn" id="nav-notif-btn" onclick="document.getElementById('nav-notif-dropdown').classList.toggle('hidden')">
+                        <i class="fa-solid fa-bell"></i>
+                        <span id="nav-notif-badge" class="notification-badge hidden">0</span>
+                    </button>
+                    <div id="nav-notif-dropdown" class="glass hidden" style="position: absolute; top: 120%; right: -20px; min-width: 320px; padding: 0; display: flex; flex-direction: column; border-radius: var(--radius-md); box-shadow: var(--shadow-lg); z-index: 200;">
+                        <div style="padding: 1rem; border-bottom: 1px solid var(--border); font-weight: 600; display: flex; justify-content: space-between; align-items: center;">
+                            <span>Notifications</span>
+                            <button class="icon-btn" style="font-size: 0.9rem;" onclick="document.getElementById('nav-notif-dropdown').classList.add('hidden')"><i class="fa-solid fa-xmark"></i></button>
+                        </div>
+                        <div id="notifications-list" style="max-height: 350px; overflow-y: auto;">
+                            <!-- Populated via JS -->
+                        </div>
+                    </div>
+                </div>
+                <span id="nav-user-name">User Name</span>
+                <div class="profile-dropdown-container">
+                    <img src="https://i.pravatar.cc/150?img=11" alt="Profile" class="avatar" id="nav-avatar">
+                    <div class="dropdown-menu glass">
+                        <a href="#" id="nav-dash-link">Dashboard</a>
+                        <a href="#" id="btn-logout" class="text-danger">Logout</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <button class="mobile-menu-btn"><i class="fa-solid fa-bars"></i></button>
+    </nav>
+    <div class="mobile-nav glass hidden">
+        <a href="index.html">Home</a>
+        <a href="#" data-route="doctors">Doctors</a>
+        <a href="#" onclick="openEmergencyModal()" class="text-danger">Emergency</a>
+        <a href="login.html" class="mobile-guest">Login</a>
+        <a href="#" id="mobile-dash-link" class="mobile-user hidden">Dashboard</a>
+        <a href="#" id="mobile-logout" class="mobile-user text-danger hidden">Logout</a>
+    </div>
+
+    <!-- Main Application Container -->
+    <main id="app-root">
+
+        <!-- HOME VIEW -->
+        <section id="view-home" class="view active">
+            <!-- Hero Section -->
+            <div class="hero">
+                <div class="hero-content">
+                    <div class="badge fade-in-up">Healthcare at Your Fingertips</div>
+                    <h1 class="fade-in-up" style="animation-delay: 0.1s">Find & Book The Best <span
+                            class="text-primary">Doctors</span> Near You</h1>
+                    <p class="fade-in-up" style="animation-delay: 0.2s">Get expert medical advice and consultations from
+                        top-rated specialists without leaving your home.</p>
+
+                    <!-- Search Bar in Hero -->
+                    <div class="hero-search glass fade-in-up" style="animation-delay: 0.3s">
+                        <div class="search-input">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                            <input type="text" id="home-search"
+                                placeholder="Search by doctor name or specialization...">
+                        </div>
+                        <button class="btn btn-primary" id="btn-home-search">Find Doctors</button>
+                    </div>
+                </div>
+                <div class="hero-image fade-in-up" style="animation-delay: 0.4s">
+                    <img src="https://images.unsplash.com/photo-1638202993928-7267aad84c31?auto=format&fit=crop&w=600&q=80"
+                        alt="Doctor giving a consult">
+                </div>
+            </div>
+
+            <!-- Categories -->
+            <div class="categories-section container">
+                <h2 class="section-title">Specializations</h2>
+                <div class="categories-grid" id="home-categories">
+                    <!-- Loaded via JS -->
+                </div>
+            </div>
+
+            <!-- Featured Doctors -->
+            <div class="featured-section container">
+                <div class="section-header">
+                    <h2 class="section-title">Top Rated Doctors</h2>
+                    <a href="#" data-route="doctors" class="see-all">See All <i class="fa-solid fa-arrow-right"></i></a>
+                </div>
+                <div class="doctors-grid" id="home-featured-doctors">
+                    <!-- Loaded via JS -->
+                </div>
+            </div>
+        </section>
+
+        <!-- DOCTORS LISTING VIEW -->
+        <section id="view-doctors" class="view hidden container">
+            <h1 class="page-title">Find a Doctor</h1>
+            <!-- Filters -->
+            <div class="filters-bar glass">
+                <div class="search-input full-width">
+                    <i class="fa-solid fa-search"></i>
+                    <input type="text" id="list-search" placeholder="Search doctors, specializations, clinics...">
+                </div>
+                <select class="filter-select" id="list-filter-spec">
+                    <option value="All">All Specializations</option>
+                    <option value="Cardiologist">Cardiologist</option>
+                    <option value="Dentist">Dentist</option>
+                    <option value="General Physician">General Physician</option>
+                    <option value="Neurologist">Neurologist</option>
+                    <option value="Orthopedic">Orthopedic</option>
+                    <option value="Pediatrician">Pediatrician</option>
+                    <option value="Dermatologist">Dermatologist</option>
+                </select>
+            </div>
+
+            <div class="doctors-grid" id="doctors-list-grid">
+                <!-- Skeleton Loading / Loaded via JS -->
+            </div>
+        </section>
+
+        <!-- DOCTOR PROFILE VIEW -->
+        <section id="view-profile" class="view hidden container">
+            <button class="btn btn-outline back-btn" data-route="doctors"><i class="fa-solid fa-arrow-left"></i> Back to
+                Doctors</button>
+            <div id="profile-content">
+                <!-- Profile Loaded via JS -->
+            </div>
+        </section>
+
+        <!-- AUTHENTICATION AND DASHBOARDS MOVED TO SEPARATE FILES -->
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer
+        style="background: var(--surface); padding: 3rem 2rem; border-top: 1px solid var(--border); margin-top: 4rem;">
+        <div class="container" style="display: flex; flex-wrap: wrap; justify-content: space-between; gap: 2rem;">
+            <div style="max-width: 300px;">
+                <div style="font-size: 1.5rem; font-weight: 700; margin-bottom: 1rem; color: var(--text-main);">
+                    <i class="fa-solid fa-house-medical-pulse text-danger"></i> <span
+                        class="brand-text">QuickHealer</span>
+                </div>
+                <p class="text-muted" style="line-height: 1.6;">Your trusted partner for quick and reliable online
+                    doctor consultations and medical emergency assistance.</p>
+            </div>
+            <div>
+                <h4 style="margin-bottom: 1rem;">Quick Links</h4>
+                <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+                    <a href="index.html" class="text-muted">Home</a>
+                    <a href="#" data-route="doctors" class="text-muted">Find a Doctor</a>
+                    <a href="login.html" class="text-muted">Login/Register</a>
+                </div>
+            </div>
+            <div>
+                <h4 style="margin-bottom: 1rem;">Contact Us</h4>
+                <p class="text-muted"><i class="fa-solid fa-envelope"></i> support@quickhealer.com</p>
+                <p class="text-muted mt-2"><i class="fa-solid fa-phone"></i> +91 1800 123 4567</p>
+            </div>
+        </div>
+        <div class="text-center text-muted"
+            style="margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid var(--border); font-size: 0.9rem;">
+            &copy; 2026 QuickHealer. All rights reserved.
+        </div>
+    </footer>
+
+    <!-- FLOATING CHAT BUTTON -->
+    <button class="chat-fab" onclick="document.getElementById('chat-widget').classList.toggle('hidden')">
+        <i class="fa-solid fa-comments"></i>
+    </button>
+
+    <!-- CHAT WIDGET -->
+    <div id="chat-widget" class="chat-widget glass hidden">
+        <div class="chat-header">
+            <h4>Support</h4>
+            <button class="icon-btn" onclick="document.getElementById('chat-widget').classList.add('hidden')"><i
+                    class="fa-solid fa-xmark"></i></button>
+        </div>
+        <div class="chat-body">
+            <div class="chat-msg bot">Hi there! How can we help you today?</div>
+            <div class="chat-msg user mb-gap">I want to book an appointment.</div>
+            <div class="chat-msg bot">Great! You can browse our doctors list and click 'Book Appointment' on their
+                profile.</div>
+        </div>
+        <div class="chat-input">
+            <input type="text" placeholder="Type a message...">
+            <button><i class="fa-solid fa-paper-plane"></i></button>
+        </div>
+    </div>
+
+    <!-- BOOKING MODAL -->
+    <div id="booking-modal" class="modal-overlay hidden">
+        <div class="modal glass fade-in-up">
+            <div class="modal-header">
+                <h3>Book Appointment</h3>
+                <button class="icon-btn close-modal"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="modal-body" id="booking-modal-body">
+                <!-- Content populated via JS -->
+            </div>
+        </div>
+    </div>
+
+    <!-- EMERGENCY MODAL -->
+    <div id="emergency-modal" class="modal-overlay hidden">
+        <div class="modal glass fade-in-up" style="border: 2px solid var(--danger);">
+            <div class="modal-header"
+                style="background: var(--danger-light); color: var(--danger); border-bottom: 1px solid rgba(220, 38, 38, 0.2);">
+                <h3><i class="fa-solid fa-triangle-exclamation"></i> Emergency Assistance</h3>
+                <button class="icon-btn" onclick="closeEmergencyModal()" style="color: var(--danger);"><i
+                        class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="modal-body text-center" id="emergency-modal-body">
+                <p style="margin-bottom: 1.5rem; font-size: 1.1rem;">If you are experiencing a life-threatening
+                    emergency, please call an ambulance immediately.</p>
+                <div style="display: flex; gap: 1rem; flex-direction: column;">
+                    <a href="tel:102" class="btn btn-danger" style="font-size: 1.25rem; padding: 1rem;"><i
+                            class="fa-solid fa-phone"></i> Call Ambulance (102)</a>
+                    <div style="margin: 1rem 0; color: var(--text-muted);">OR</div>
+                    <button class="btn btn-primary" onclick="startEmergencyGPS()"><i class="fa-solid fa-bolt"></i> Book
+                        Immediate Emergency Slot</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- TOAST NOTIFICATION -->
+    <div id="toast-container" class="toast-container"></div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
+

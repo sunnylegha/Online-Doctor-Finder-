@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QuickHealer | Doctor Dashboard</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="light-mode">
+    
+    <!-- Navbar -->
+    <nav class="navbar glass">
+        <div class="nav-brand">
+            <i class="fa-solid fa-house-medical-pulse text-danger"></i> <span class="brand-text">QuickHealer</span>
+        </div>
+        <div class="nav-links">
+            <a href="index.html"><i class="fa-solid fa-house"></i> Home</a>
+            <span class="text-muted" style="margin-left: 1rem;"><i class="fa-solid fa-stethoscope"></i> Doctor Portal</span>
+        </div>
+        <div class="nav-actions">
+            <div class="icon-btn" style="position: relative; margin-right: 10px;" onclick="toggleNotifications()">
+                <i class="fa-regular fa-bell"></i>
+                <span class="notification-badge hidden" id="nav-notif-badge">0</span>
+                <!-- Notifications Dropdown -->
+                <div class="dropdown-menu glass" id="notifications-dropdown" style="width: 300px; right: 0; left: auto; padding: 0;">
+                    <div style="padding: 1rem; border-bottom: 1px solid var(--border); font-weight: bold;">Notifications</div>
+                    <div id="notifications-list" style="max-height: 300px; overflow-y: auto;">
+                        <!-- JS injected -->
+                    </div>
+                </div>
+            </div>
+            <button id="theme-toggle" class="icon-btn" title="Toggle Theme"><i class="fa-solid fa-moon"></i></button>
+            <div id="nav-btn-user">
+                <span id="nav-user-name">Loading...</span>
+                <div class="profile-dropdown-container">
+                    <img src="https://i.pravatar.cc/150?img=12" alt="Profile" class="avatar" id="nav-avatar">
+                    <div class="dropdown-menu glass">
+                        <a href="doctor-dashboard.html">Dashboard</a>
+                        <a href="#" id="btn-logout" class="text-danger">Logout</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <button class="mobile-menu-btn"><i class="fa-solid fa-bars"></i></button>
+    </nav>
+    <div class="mobile-nav glass hidden">
+        <a href="index.html">Home</a>
+        <a href="doctor-dashboard.html" class="mobile-user">Dashboard</a>
+        <a href="#" id="mobile-logout" class="mobile-user text-danger">Logout</a>
+    </div>
+
+    <!-- Main Application Container -->
+    <main id="app-root">
+
+        <!-- DOCTOR DASHBOARD VIEW -->
+        <section id="view-dashboard-doctor" class="view container dashboard-layout">
+            <aside class="dashboard-sidebar glass">
+                <div class="sidebar-profile">
+                    <img src="https://i.pravatar.cc/150?img=12" alt="Doctor" id="doctor-dash-img" class="avatar-lg">
+                    <h3 id="doctor-dash-name">Loading...</h3>
+                    <span class="badge" id="doctor-dash-spec">Doctor</span>
+                </div>
+                <div class="sidebar-links">
+                    <button class="active" data-tab="doc-schedule"><i class="fa-regular fa-calendar-check"></i> Approved Appointments</button>
+                    <button data-tab="doc-emergency"><i class="fa-solid fa-truck-medical"></i> Emergency Cases</button>
+                    <button data-tab="doc-manage"><i class="fa-solid fa-clock"></i> Manage Availability</button>
+                    <button data-tab="doc-profile"><i class="fa-regular fa-user"></i> Patient Records</button>
+                </div>
+            </aside>
+            <div class="dashboard-content">
+                <div id="doc-schedule" class="dash-tab active">
+                    <h2 class="dash-title">Upcoming Appointments</h2>
+                    <p class="text-muted mb-gap">Showing only appointments approved by Admin.</p>
+                    <div id="doctor-appointments-list" class="appointment-list">
+                        <!-- Loaded via JS -->
+                    </div>
+                </div>
+                <div id="doc-emergency" class="dash-tab hidden">
+                    <h2 class="dash-title text-danger">Emergency Cases</h2>
+                    <p class="text-muted mb-gap">High priority emergency appointments assigned to you.</p>
+                    <div id="doctor-emergency-list" class="appointment-list">
+                        <!-- Loaded via JS -->
+                    </div>
+                </div>
+                <div id="doc-manage" class="dash-tab hidden">
+                    <h2 class="dash-title">Manage Availability</h2>
+                    <div class="glass p-3 rounded" style="padding: 2rem;">
+                        <h4>Add New Time Slot</h4>
+                        <div style="display:flex; gap: 10px; margin-top: 1rem; flex-wrap:wrap;">
+                            <input type="date" class="form-input" style="flex:1">
+                            <input type="time" class="form-input" style="flex:1">
+                            <button class="btn btn-primary" onclick="showToast('Slot added! (UI Demo)')">Add Slot</button>
+                        </div>
+                    </div>
+                </div>
+                <div id="doc-profile" class="dash-tab hidden">
+                    <h2 class="dash-title">Patient Records</h2>
+                    <p class="text-muted">Search and view details of patients you have treated.</p>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- TOAST NOTIFICATION -->
+    <div id="toast-container" class="toast-container"></div>
+
+    <script src="script.js"></script>
+    <script>
+        // Check Auth on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            const user = JSON.parse(localStorage.getItem('quickhealer_user'));
+            if (!user || user.role !== 'doctor') {
+                window.location.href = 'login.html';
+            }
+        });
+
+        function toggleNotifications() {
+            document.getElementById('notifications-dropdown').classList.toggle('hidden');
+            if(!document.getElementById('notifications-dropdown').classList.contains('hidden')) {
+                markNotificationsAsRead(JSON.parse(localStorage.getItem('quickhealer_user')).email);
+            }
+        }
+    </script>
+</body>
+</html>

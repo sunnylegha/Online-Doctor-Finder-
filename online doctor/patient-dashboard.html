@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QuickHealer | Patient Dashboard</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="light-mode">
+    
+    <!-- Navbar -->
+    <nav class="navbar glass">
+        <div class="nav-brand">
+            <i class="fa-solid fa-house-medical-pulse text-danger"></i> <span class="brand-text">QuickHealer</span>
+        </div>
+        <div class="nav-links">
+            <a href="index.html"><i class="fa-solid fa-house"></i> Home</a>
+            <a href="index.html" data-route="doctors"><i class="fa-solid fa-user-doctor"></i> Doctors</a>
+        </div>
+        <div class="nav-actions">
+            <button class="btn btn-emergency" onclick="openEmergencyModal()"><i class="fa-solid fa-truck-medical"></i> Emergency</button>
+            <div class="icon-btn" style="position: relative; margin-right: 10px;" onclick="toggleNotifications()">
+                <i class="fa-regular fa-bell"></i>
+                <span class="notification-badge hidden" id="nav-notif-badge">0</span>
+                <!-- Notifications Dropdown -->
+                <div class="dropdown-menu glass" id="notifications-dropdown" style="width: 300px; right: 0; left: auto; padding: 0;">
+                    <div style="padding: 1rem; border-bottom: 1px solid var(--border); font-weight: bold;">Notifications</div>
+                    <div id="notifications-list" style="max-height: 300px; overflow-y: auto;">
+                        <!-- JS injected -->
+                    </div>
+                </div>
+            </div>
+            <button id="theme-toggle" class="icon-btn" title="Toggle Theme"><i class="fa-solid fa-moon"></i></button>
+            <div id="nav-btn-user">
+                <span id="nav-user-name">Loading...</span>
+                <div class="profile-dropdown-container">
+                    <img src="https://i.pravatar.cc/150?img=11" alt="Profile" class="avatar" id="nav-avatar">
+                    <div class="dropdown-menu glass">
+                        <a href="patient-dashboard.html">Dashboard</a>
+                        <a href="#" id="btn-logout" class="text-danger">Logout</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <button class="mobile-menu-btn"><i class="fa-solid fa-bars"></i></button>
+    </nav>
+    <div class="mobile-nav glass hidden">
+        <a href="index.html">Home</a>
+        <a href="#" onclick="openEmergencyModal()" class="text-danger">Emergency</a>
+        <a href="patient-dashboard.html" class="mobile-user">Dashboard</a>
+        <a href="#" id="mobile-logout" class="mobile-user text-danger">Logout</a>
+    </div>
+
+    <!-- Main Application Container -->
+    <main id="app-root">
+
+        <!-- PATIENT DASHBOARD VIEW -->
+        <section id="view-dashboard-patient" class="view container dashboard-layout">
+            <aside class="dashboard-sidebar glass">
+                <div class="sidebar-profile">
+                    <img src="https://i.pravatar.cc/150?img=11" alt="Patient" id="patient-dash-img" class="avatar-lg">
+                    <h3 id="patient-dash-name">Loading...</h3>
+                    <p class="text-sm">Patient</p>
+                </div>
+                <div class="sidebar-links">
+                    <button class="active" data-tab="pat-appointments"><i class="fa-regular fa-calendar"></i> My Appointments</button>
+                    <button data-tab="pat-emergency"><i class="fa-solid fa-truck-medical"></i> Emergency Requests</button>
+                    <button data-tab="pat-profile"><i class="fa-regular fa-user"></i> Profile</button>
+                </div>
+            </aside>
+            <div class="dashboard-content">
+                <div id="pat-appointments" class="dash-tab active">
+                    <h2 class="dash-title">Upcoming Appointments</h2>
+                    <div id="patient-upcoming-list" class="appointment-list">
+                        <!-- Loaded via JS -->
+                    </div>
+                    
+                    <h2 class="dash-title mt-4">Past Appointments</h2>
+                    <div id="patient-past-list" class="appointment-list">
+                        <!-- Loaded via JS -->
+                    </div>
+                </div>
+                
+                <div id="pat-emergency" class="dash-tab hidden">
+                    <h2 class="dash-title text-danger">Emergency Requests</h2>
+                    <p class="text-muted mb-gap">Your recent emergency booking history and status.</p>
+                    <div id="patient-emergency-list" class="appointment-list">
+                        <!-- Loaded via JS -->
+                    </div>
+                </div>
+
+                <div id="pat-profile" class="dash-tab hidden">
+                    <h2 class="dash-title">Profile Settings</h2>
+                    <div class="glass p-3 rounded" style="padding: 2rem;">
+                        <p class="text-muted">Manage your personal details here.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- EMERGENCY MODAL -->
+    <div id="emergency-modal" class="modal-overlay hidden">
+        <div class="modal glass fade-in-up" style="border: 2px solid var(--danger);">
+            <div class="modal-header" style="background: var(--danger-light); color: var(--danger); border-bottom: 1px solid rgba(220, 38, 38, 0.2);">
+                <h3><i class="fa-solid fa-triangle-exclamation"></i> Emergency Assistance</h3>
+                <button class="icon-btn" onclick="closeEmergencyModal()" style="color: var(--danger);"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="modal-body text-center">
+                <p style="margin-bottom: 1.5rem; font-size: 1.1rem;">If you are experiencing a life-threatening emergency, please call an ambulance immediately.</p>
+                <div style="display: flex; gap: 1rem; flex-direction: column;">
+                    <a href="tel:102" class="btn btn-danger" style="font-size: 1.25rem; padding: 1rem;"><i class="fa-solid fa-phone"></i> Call Ambulance (102)</a>
+                    <div style="margin: 1rem 0; color: var(--text-muted);">OR</div>
+                    <button class="btn btn-primary" onclick="bookEmergencySlot()"><i class="fa-solid fa-bolt"></i> Book Immediate Emergency Slot</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- TOAST NOTIFICATION -->
+    <div id="toast-container" class="toast-container"></div>
+
+    <script src="script.js"></script>
+    <script>
+        // Check Auth on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            const user = JSON.parse(localStorage.getItem('quickhealer_user'));
+            if (!user || user.role !== 'patient') {
+                window.location.href = 'login.html';
+            }
+        });
+        
+        function toggleNotifications() {
+            document.getElementById('notifications-dropdown').classList.toggle('hidden');
+            // If showing, maybe mark all as read? Implementation in script.js
+            if(!document.getElementById('notifications-dropdown').classList.contains('hidden')) {
+                markNotificationsAsRead(JSON.parse(localStorage.getItem('quickhealer_user')).email);
+            }
+        }
+    </script>
+</body>
+</html>

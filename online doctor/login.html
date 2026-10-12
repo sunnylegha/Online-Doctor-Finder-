@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QuickHealer | Login</title>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Custom Styles -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="light-mode">
+    
+    <!-- Navbar -->
+    <nav class="navbar glass">
+        <div class="nav-brand">
+            <i class="fa-solid fa-house-medical-pulse text-danger"></i> <span class="brand-text">QuickHealer</span>
+        </div>
+        <div class="nav-links">
+            <a href="index.html"><i class="fa-solid fa-house"></i> Home</a>
+            <a href="index.html" data-route="doctors"><i class="fa-solid fa-user-doctor"></i> Doctors</a>
+        </div>
+        <div class="nav-actions">
+            <button id="theme-toggle" class="icon-btn" title="Toggle Theme"><i class="fa-solid fa-moon"></i></button>
+            <div id="nav-btn-guest">
+                <a href="login.html" class="btn btn-primary">Login</a>
+            </div>
+        </div>
+        <button class="mobile-menu-btn"><i class="fa-solid fa-bars"></i></button>
+    </nav>
+    <div class="mobile-nav glass hidden">
+        <a href="index.html">Home</a>
+        <a href="index.html" data-route="doctors">Doctors</a>
+        <a href="login.html" class="mobile-guest">Login</a>
+    </div>
+
+    <!-- Main Application Container -->
+    <main id="app-root">
+
+        <!-- AUTHENTICATION (LOGIN & SIGNUP) VIEW -->
+        <section id="view-auth" class="view container auth-view">
+            <div class="auth-card glass">
+                <div class="auth-tabs" style="display: flex; gap: 1rem; margin-bottom: 1.5rem;">
+                    <button class="btn btn-primary full-width active" id="btn-show-login" style="flex:1;">Login</button>
+                    <button class="btn btn-outline full-width" id="btn-show-signup" style="flex:1;">Sign Up</button>
+                </div>
+
+                <!-- LOGIN FORM -->
+                <div id="login-container">
+                    <h2>Welcome Back</h2>
+                    <p id="login-role-text">Logging in as Patient</p>
+                    
+                    <div class="form-group">
+                        <div class="role-selector" style="margin-bottom: 1.5rem;" id="login-role-selector">
+                            <label class="role-option active" id="tab-patient-login">
+                                <input type="radio" name="login-role" value="patient" checked>
+                                <i class="fa-solid fa-user-injured"></i> Patient
+                            </label>
+                            <label class="role-option" id="tab-doctor-login">
+                                <input type="radio" name="login-role" value="doctor">
+                                <i class="fa-solid fa-user-doctor"></i> Doctor
+                            </label>
+                            <label class="role-option" id="tab-admin-login">
+                                <input type="radio" name="login-role" value="admin">
+                                <i class="fa-solid fa-user-shield"></i> Admin
+                            </label>
+                        </div>
+                    </div>
+
+                    <form id="form-login">
+                        <div class="form-group">
+                            <label>Email</label>
+                            <div class="input-wrap">
+                                <i class="fa-regular fa-envelope"></i>
+                                <input type="email" id="login-email" required placeholder="patient@quickhealer.com">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Password</label>
+                            <div class="input-wrap">
+                                <i class="fa-solid fa-lock"></i>
+                                <input type="password" id="login-pwd" required placeholder="patient123">
+                                <i class="fa-solid fa-eye toggle-password" style="left: auto; right: 1rem; cursor: pointer;"></i>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary full-width">Login</button>
+                    </form>
+                    
+                    <div class="demo-creds">
+                        <p><strong>Demo Credentials:</strong><br>
+                        <span id="demo-cred-hint">Patient: patient@quickhealer.com | pw: patient123</span></p>
+                    </div>
+                </div>
+
+                <!-- SIGNUP FORM -->
+                <div id="signup-container" class="hidden">
+                    <h2>Create Account</h2>
+                    <p id="signup-role-text">Select a role to register</p>
+                    
+                    <div class="form-group">
+                        <div class="role-selector" style="margin-bottom: 1.5rem;" id="signup-role-selector">
+                            <label class="role-option" id="tab-patient-signup">
+                                <input type="radio" name="signup-role" value="patient">
+                                <i class="fa-solid fa-user-injured"></i> Patient
+                            </label>
+                            <label class="role-option" id="tab-doctor-signup">
+                                <input type="radio" name="signup-role" value="doctor">
+                                <i class="fa-solid fa-user-doctor"></i> Doctor
+                            </label>
+                            <label class="role-option" id="tab-admin-signup">
+                                <input type="radio" name="signup-role" value="admin">
+                                <i class="fa-solid fa-user-shield"></i> Admin
+                            </label>
+                        </div>
+                    </div>
+
+                    <form id="form-signup">
+                        <div class="form-group">
+                            <label>Full Name</label>
+                            <div class="input-wrap">
+                                <i class="fa-regular fa-user"></i>
+                                <input type="text" id="signup-name" required placeholder="John Doe">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Gmail Address</label>
+                            <div class="input-wrap">
+                                <i class="fa-brands fa-google"></i>
+                                <input type="email" id="signup-email" required placeholder="johndoe@gmail.com">
+                            </div>
+                            <small class="text-muted text-sm">Must end with @gmail.com</small>
+                        </div>
+                        <div class="form-group">
+                            <label>Password</label>
+                            <div class="input-wrap">
+                                <i class="fa-solid fa-lock"></i>
+                                <input type="password" id="signup-pwd" required placeholder="Create password">
+                                <i class="fa-solid fa-eye toggle-password" style="left: auto; right: 1rem; cursor: pointer;"></i>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Confirm Password</label>
+                            <div class="input-wrap">
+                                <i class="fa-solid fa-lock"></i>
+                                <input type="password" id="signup-pwd-confirm" required placeholder="Confirm password">
+                                <i class="fa-solid fa-eye toggle-password" style="left: auto; right: 1rem; cursor: pointer;"></i>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary full-width">Sign Up</button>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- TOAST NOTIFICATION -->
+    <div id="toast-container" class="toast-container"></div>
+
+    <script src="script.js"></script>
+</body>
+</html>

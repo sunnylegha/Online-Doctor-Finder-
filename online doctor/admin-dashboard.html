@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QuickHealer | Admin Dashboard</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="light-mode">
+    
+    <!-- Navbar -->
+    <nav class="navbar glass">
+        <div class="nav-brand">
+            <i class="fa-solid fa-house-medical-pulse text-danger"></i> <span class="brand-text">QuickHealer</span>
+        </div>
+        <div class="nav-links">
+            <a href="index.html"><i class="fa-solid fa-house"></i> Home</a>
+            <span class="text-muted" style="margin-left: 1rem;"><i class="fa-solid fa-shield-halved"></i> Admin Portal</span>
+        </div>
+        <div class="nav-actions">
+            <div class="icon-btn" style="position: relative; margin-right: 10px;" onclick="toggleNotifications()">
+                <i class="fa-regular fa-bell"></i>
+                <span class="notification-badge hidden" id="nav-notif-badge">0</span>
+                <!-- Notifications Dropdown -->
+                <div class="dropdown-menu glass" id="notifications-dropdown" style="width: 300px; right: 0; left: auto; padding: 0;">
+                    <div style="padding: 1rem; border-bottom: 1px solid var(--border); font-weight: bold;">Notifications</div>
+                    <div id="notifications-list" style="max-height: 300px; overflow-y: auto;">
+                        <!-- JS injected -->
+                    </div>
+                </div>
+            </div>
+            <button id="theme-toggle" class="icon-btn" title="Toggle Theme"><i class="fa-solid fa-moon"></i></button>
+            <div id="nav-btn-user">
+                <span id="nav-user-name">Loading...</span>
+                <div class="profile-dropdown-container">
+                    <img src="https://i.pravatar.cc/150?img=14" alt="Profile" class="avatar" id="nav-avatar">
+                    <div class="dropdown-menu glass">
+                        <a href="admin-dashboard.html">Dashboard</a>
+                        <a href="#" id="btn-logout" class="text-danger">Logout</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <button class="mobile-menu-btn"><i class="fa-solid fa-bars"></i></button>
+    </nav>
+    <div class="mobile-nav glass hidden">
+        <a href="index.html">Home</a>
+        <a href="admin-dashboard.html" class="mobile-user">Dashboard</a>
+        <a href="#" id="mobile-logout" class="mobile-user text-danger">Logout</a>
+    </div>
+    <!-- Main Application Container -->
+    <main id="app-root">
+
+        <!-- ADMIN DASHBOARD VIEW -->
+        <section id="view-dashboard-admin" class="view container dashboard-layout">
+            <aside class="dashboard-sidebar glass">
+                <div class="sidebar-profile">
+                    <img src="https://i.pravatar.cc/150?img=14" alt="Admin" id="admin-dash-img" class="avatar-lg">
+                    <h3 id="admin-dash-name">Loading...</h3>
+                    <span class="badge" style="background: var(--primary); color: white;">Administrator</span>
+                </div>
+                <div class="sidebar-links">
+                    <button class="active" data-tab="admin-overview"><i class="fa-solid fa-chart-pie"></i> Overview</button>
+                    <button data-tab="admin-approvals"><i class="fa-solid fa-clipboard-check"></i> Pending Approvals</button>
+                    <button data-tab="admin-emergency"><i class="fa-solid fa-truck-medical"></i> Emergency Cases</button>
+                    <button data-tab="admin-doctors"><i class="fa-solid fa-user-doctor"></i> Manage Doctors</button>
+                    <button data-tab="admin-patients"><i class="fa-solid fa-users"></i> Manage Patients</button>
+                </div>
+            </aside>
+            <div class="dashboard-content">
+                <div id="admin-overview" class="dash-tab active">
+                    <h2 class="dash-title">System Overview</h2>
+                    
+                    <div class="metrics-grid" id="admin-metrics">
+                        <!-- Loaded via JS -->
+                    </div>
+                    
+                    <h3 class="mt-4 mb-gap">Recent Activity</h3>
+                    <div id="admin-recent-activity" class="appointment-list">
+                        <!-- Loaded via JS (mixed list of appointments) -->
+                    </div>
+                </div>
+                
+                <div id="admin-approvals" class="dash-tab hidden">
+                    <h2 class="dash-title">Pending Approvals</h2>
+                    <p class="text-muted mb-gap">Review and approve or reject patient appointment requests.</p>
+                    <div id="admin-pending-list" class="appointment-list">
+                        <!-- Loaded via JS -->
+                    </div>
+                </div>
+
+                <div id="admin-emergency" class="dash-tab hidden">
+                    <h2 class="dash-title text-danger">Emergency Cases</h2>
+                    <p class="text-muted mb-gap">High priority emergency appointments.</p>
+                    <div id="admin-emergency-list" class="appointment-list">
+                        <!-- Loaded via JS -->
+                    </div>
+                </div>
+                
+                <div id="admin-doctors" class="dash-tab hidden">
+                    <h2 class="dash-title">Manage Doctors</h2>
+                    <div class="glass p-3 rounded" style="padding: 2rem;">
+                        <p class="text-muted">Doctor management list goes here.</p>
+                    </div>
+                </div>
+
+                <div id="admin-patients" class="dash-tab hidden">
+                    <h2 class="dash-title">Manage Patients</h2>
+                    <div class="glass p-3 rounded" style="padding: 2rem;">
+                        <p class="text-muted">Patient management list goes here.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- TOAST NOTIFICATION -->
+    <div id="toast-container" class="toast-container"></div>
+
+    <script src="script.js"></script>
+    <script>
+        // Check Auth on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            const user = JSON.parse(localStorage.getItem('quickhealer_user'));
+            if (!user || user.role !== 'admin') {
+                window.location.href = 'login.html';
+            }
+        });
+ 
+        function toggleNotifications() {
+            document.getElementById('notifications-dropdown').classList.toggle('hidden');
+            if(!document.getElementById('notifications-dropdown').classList.contains('hidden')) {
+                markNotificationsAsRead(JSON.parse(localStorage.getItem('quickhealer_user')).email);
+            }
+        }
+    </script>
+</body>
+</html>
